@@ -1,6 +1,6 @@
 FROM golang:latest
-COPY . /thermite
-WORKDIR /thermite
+COPY . /kayo
+WORKDIR /kayo
 
 RUN go mod download
 
