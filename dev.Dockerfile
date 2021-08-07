@@ -1,7 +1,5 @@
 FROM golang:latest
 COPY . /kayo
-COPY go-dev.mod /kayo/go.mod
-COPY ../gobase /gobase
 WORKDIR /kayo
 
 RUN go mod download
