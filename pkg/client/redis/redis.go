@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"github.com/go-redis/redis/v8"
+	"github.com/workfoxes/kayo/pkg/config"
 	"github.com/workfoxes/kayo/pkg/errors"
 	"sync"
 	"time"
@@ -19,9 +20,9 @@ func (r *Redis) Init() {
 	var err error = nil
 	r.once.Do(func() {
 		r._default = redis.NewClient(&redis.Options{
-			Addr:     "", //config.RedisHost,
-			Password: "", //config.RedisPassword, // no password set
-			DB:       0,  // use default DB
+			Addr:     config.C.RedisHost,
+			Password: config.C.RedisPassword,
+			DB:       0,
 		})
 		if err = r._default.Ping(nil).Err(); err != nil {
 			panic(errors.RedisUnreachable)
@@ -37,4 +38,9 @@ func Get(ctx context.Context, key string) *redis.StringCmd {
 func Set(ctx context.Context, key string, value interface{}, expiration time.Duration) *redis.StatusCmd {
 	r.Init()
 	return r._default.Set(ctx, key, value, expiration)
+}
+
+func Subscribe(ctx context.Context, channel string) *redis.PubSub {
+	r.Init()
+	return r._default.Subscribe(ctx, channel)
 }

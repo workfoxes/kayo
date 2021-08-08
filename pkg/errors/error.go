@@ -13,3 +13,7 @@ func (e *BaseError) Error() string { return e.msg }
 func InternalError(message string) *BaseError {
 	return &BaseError{msg: message, Code: http.StatusInternalServerError}
 }
+
+func RequestTimeoutError(message string) *BaseError {
+	return &BaseError{msg: message, Code: http.StatusRequestTimeout}
+}
