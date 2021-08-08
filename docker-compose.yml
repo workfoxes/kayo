@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:5.0.2
+    volumes:
+      - ./cache/db/:/data/doc_db
+    ports:
+      - "27017:27017"
+  
+  redis-cache:
+    container_name: redis-cache
+    image: redis:6.2.5-alpine3.14
+    volumes:
+      - ./cache/redis/:/data
+    ports:
+      - "6379:6379"
+
+#  influxdb:
+#    container_name: influxdb
+#    image: influxdb:2.0.7-alpine
+#    ports:
+#      - '8086:8086'
+#    volumes:
+#      - ./cache/influx:/var/lib/influxdb
+#    environment:
+#      - INFLUXDB_DB=db0
+
+#  kayo-worker:
+#    container_name: kayo-service
+#    image: redis:5.0-rc3-alpine
+#    volumes:
+#      - ./data/redis/:/data
+#    ports:
+#      - "6379:6379"
