@@ -17,4 +17,4 @@
 *config.json
 *sample.go
 /cache
-/.idea
+**.idea**
