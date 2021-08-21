@@ -12,6 +12,3 @@ func (b *InteractiveBroker) Initialize() {
 	b.Name = _default.InteractiveBroker
 	b.IsWebSocketSupported = true
 }
-
-func (b *InteractiveBroker) RegisterWebsocketClient() {
-}

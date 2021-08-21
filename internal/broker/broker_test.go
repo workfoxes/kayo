@@ -24,6 +24,7 @@ func TestNewBroker(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := NewBroker(tt.args.brokerName); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewBroker() = %v, want %v", got, tt.want)
+				got.Initialize()
 			}
 		})
 	}
