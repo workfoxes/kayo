@@ -7,14 +7,6 @@ import (
 	"time"
 )
 
-type KayoWorker struct {
-	Name       string
-	BrokerName string
-	Symbol     []string
-	IsLive     bool
-	Strategy   string
-}
-
 var (
 	_broker   = flag.String("broker", "Binance", "Broker : that will be used for trading")
 	_symbol   = flag.String("symbol", "BTCUSDT", "Symbol : which will tracked and traded by bot")
@@ -30,7 +22,7 @@ func main() {
 			Strategy: *_strategy}
 		_runner.Initialize()
 	}
-	//for {
-	time.Sleep(time.Second * 1000000)
-	//}
+	for {
+		time.Sleep(time.Second * 1000000)
+	}
 }

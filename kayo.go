@@ -31,5 +31,5 @@ func main() {
 		IsLive:     *_isLive,
 		Strategy:   *_strategy,
 	}
-	kayo.Broker = broker.NewBroker(kayo.BrokerName)
+	kayo.Broker = *broker.NewBroker(kayo.BrokerName)
 }

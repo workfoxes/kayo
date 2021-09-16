@@ -1,4 +1,4 @@
-package _default
+package common
 
 import (
 	"encoding/json"
@@ -14,17 +14,6 @@ type BaseBroker struct {
 	WS                   *ws.Conn
 	Symbol               []string
 	ItemChan             chan *Item
-	//Verbose                       bool
-	//LoadedByConfig                bool
-	//SkipAuthCheck                 bool
-	//HTTPTimeout                   time.Duration
-	//HTTPUserAgent                 string
-	//HTTPRecording                 bool
-	//HTTPDebugging                 bool
-	//WebsocketResponseCheckTimeout time.Duration
-	//WebsocketResponseMaxLimit     time.Duration
-	//WebsocketOrderBookBufferLimit int64
-	//SettingsMutex                 sync.RWMutex
 }
 
 // OnWSConnected : Will be triggered when the websocket connection is opened for monitoring the trading api
@@ -48,7 +37,7 @@ func (b *BaseBroker) SendWSMessage(msg interface{}) {
 }
 
 func (b *BaseBroker) OnWSError(err error) {
-	log.Error("Error from Websocket: %s\n", err.Error())
+	log.Error("Error from Websocket : ", err.Error())
 }
 
 func (b *BaseBroker) RegisterWebsocketClient(url string) {
@@ -57,10 +46,12 @@ func (b *BaseBroker) RegisterWebsocketClient(url string) {
 		OnMessage:   b.OnWSMessage,
 		OnError:     b.OnWSError,
 	}
-	err := b.WS.Dial(url, "")
-	if err != nil {
-		log.Error("Error While connecting to WebSocket in %s : %s ", b.Name, err.Error())
+	if err := b.WS.Dial(url, ""); err != nil {
+		log.Error("Error While connecting to WebSocket in ", b.Name, " : ", err.Error())
 	}
+}
+
+func (b *BaseBroker) Listen(symbol string, itemChan chan *Item) {
 }
 
 // Item : will have all the payload needed for the item with its config
@@ -71,7 +62,4 @@ type Item struct {
 	ClosePrice   string
 	HighestPrice string
 	LowestPrice  string
-}
-
-type TradeConfig struct {
 }

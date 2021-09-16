@@ -3,42 +3,51 @@ package binance
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/workfoxes/kayo/internal/broker/default"
+	"strings"
+
+	"github.com/workfoxes/kayo/internal/broker/common"
 	"github.com/workfoxes/kayo/internal/utils/ws"
 	"github.com/workfoxes/kayo/pkg/log"
 )
 
-var obj WebSocketResponse
-
+// Binance : is Object that will hold the connection and configuration with the Binance Service.
 type Binance struct {
-	_default.BaseBroker
+	common.BaseBroker
 }
 
+// Initialize : will initialize the broker config and setup
 func (b *Binance) Initialize() {
-	b.Name = _default.Binance
+	b.Name = common.Binance
 	b.IsWebSocketSupported = true
 }
 
-func (b *Binance) Listen(itemChan chan *_default.Item) {
+// Listen : will listen the market data changes for the selected symbol
+func (b *Binance) Listen(symbol string, itemChan chan *common.Item) {
 	b.ItemChan = itemChan
+	var symbols []string
+	symbols = append(symbols, strings.Split(symbol, "|")...)
+	log.Info(symbols)
 	b.RegisterWebsocketClient(fmt.Sprintf("%s%s", StreamHostURL, RawStreamEndpoint))
 	b.SendWSMessage(&WebSocketRequest{ID: 1000, Params: []string{"btcusdt@kline_1m"}, Method: "SUBSCRIBE"})
 }
 
+// OnWSMessage : will be triggered when a message is received from the Financial Broker
 func (b *Binance) OnWSMessage(msg []byte, w *ws.Conn) {
-	obj.KPI.IsKlineClosed = false
-	if err := json.Unmarshal(msg, &obj); err != nil {
+	var binanceResponse WebSocketResponse
+	binanceResponse.KPI.IsKlineClosed = false
+	if err := json.Unmarshal(msg, &binanceResponse); err != nil {
 		log.Error("Error from Websocket: " + err.Error())
 	}
-	if obj.KPI.IsKlineClosed {
-		log.Info("New message: ", obj)
-		_item := convertToItem(obj)
+	if binanceResponse.KPI.IsKlineClosed {
+		_item := convertToItem(&binanceResponse)
+		log.Debug("New Trade Item: ", _item)
 		b.ItemChan <- _item
 	}
 }
 
-func convertToItem(kline WebSocketResponse) *_default.Item {
-	return &_default.Item{
+// convertToItem : convert the binance response to Kayo trading Item
+func convertToItem(kline *WebSocketResponse) *common.Item {
+	return &common.Item{
 		Symbol:       kline.Symbol,
 		Time:         kline.KPI.KStartTime,
 		OpenPrice:    kline.KPI.OpenPrice,
@@ -59,8 +68,7 @@ func (b *Binance) RegisterWebsocketClient(url string) {
 		OnMessage:   b.OnWSMessage,
 		OnError:     b.OnWSError,
 	}
-	err := b.WS.Dial(url, "")
-	if err != nil {
-		log.Error("Error While connecting to WebSocket in %s : %s ", b.Name, err.Error())
+	if err := b.WS.Dial(url, ""); err != nil {
+		log.Error("Error While connecting to WebSocket in", b.Name, " :", err.Error())
 	}
 }

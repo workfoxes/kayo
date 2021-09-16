@@ -1,14 +1,14 @@
 package ib
 
 import (
-	"github.com/workfoxes/kayo/internal/broker/default"
+	"github.com/workfoxes/kayo/internal/broker/common"
 )
 
 type InteractiveBroker struct {
-	_default.BaseBroker
+	common.BaseBroker
 }
 
 func (b *InteractiveBroker) Initialize() {
-	b.Name = _default.InteractiveBroker
+	b.Name = common.InteractiveBroker
 	b.IsWebSocketSupported = true
 }

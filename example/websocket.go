@@ -4,10 +4,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/workfoxes/kayo/internal/utils/ws"
-	"github.com/workfoxes/kayo/pkg/log"
 	"os"
 	"time"
+
+	"github.com/workfoxes/kayo/internal/utils/ws"
+	"github.com/workfoxes/kayo/pkg/log"
 )
 
 func main() {
