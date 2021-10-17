@@ -1,0 +1,111 @@
+run:
+  timeout: 2m30s
+  issues-exit-code: 1
+  tests: true
+  skip-dirs:
+    - vendor
+    - web/
+    - testdata
+
+linters:
+  disable-all: true
+  enable:
+# defaults
+#   - deadcode
+#   - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - typecheck
+#   - unused
+#   - varcheck
+
+# disabled by default linters
+    - asciicheck
+    - bodyclose
+    - depguard
+    - dogsled
+#   - dupl
+#   - exhaustive
+    - exportloopref
+#   - funlen
+    - gci
+#   - gochecknoglobals
+#   - gochecknoinits
+#   - gocognit
+    - goconst
+    - gocritic
+#   - gocyclo
+#   - godot
+#   - godox
+#   - goerr113
+    - gofmt
+#   - gofumpt
+    - goheader
+    - goimports
+    - golint
+#   - gomnd
+    - gomodguard
+    - goprintffuncname
+    - gosec
+#   - interfacer
+#   - lll
+#   - maligned
+    - misspell
+    - nakedret
+#   - nestif
+#   - nlreturn
+#   - noctx
+    - nolintlint
+#   - prealloc
+    - rowserrcheck
+    - scopelint
+    - sqlclosecheck
+    - stylecheck
+#   - testpackage
+    - unconvert
+    - unparam
+    - whitespace
+#   - wsl
+
+linters-settings:
+  govet:
+    check-shadowing: true
+  golint:
+    min-confidence: 0
+  goconst:
+    min-occurrences: 6
+  depguard:
+    list-type: blacklist
+#  lll:
+#    line-length: 80 # NOTE: we'll enforce this at a later point
+  gocritic:
+    enabled-tags:
+      - performance
+      - style
+      - experimental
+    disabled-checks:
+      - wrapperFunc
+      - importShadow
+      - methodExprCall
+      - evalOrder
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+  exclude-rules:
+    - text: "Expect WriteFile permissions to be 0600 or less"
+      linters:
+        - gosec
+
+  # List of regexps of issue texts to exclude, empty list by default.
+  # But independently from this option we use default exclude patterns,
+  # it can be disabled by `exclude-use-default: false`. To list all
+  # excluded by default patterns execute `golangci-lint run --help`
+  exclude:
+    # The following silences false positives in table tests
+    #   https://github.com/kyoh86/scopelint/issues/4
+     - Using the variable on range scope `ti` in function literal

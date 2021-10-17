@@ -2,7 +2,6 @@ package utils
 
 import "time"
 
-
 // Backoff determines how long to wait between request attempts.
 type Backoff func(n int) time.Duration
 
