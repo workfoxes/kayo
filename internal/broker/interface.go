@@ -8,5 +8,5 @@ type StockBroker interface {
 	Initialize()
 	RegisterWebsocketClient(url string)
 	// Listen : will listen the market data changes for the selected symbol
-	Listen(symbol string, itemChan chan *common.Item)
+	Listen(symbol string, itemChan *chan *common.Item)
 }
