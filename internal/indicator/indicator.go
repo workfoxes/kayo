@@ -1,6 +1,7 @@
 package indicator
 
 import (
+	"github.com/workfoxes/kayo/internal/errors"
 	"github.com/workfoxes/kayo/internal/indicator/adl"
 	"github.com/workfoxes/kayo/internal/indicator/adx"
 	"github.com/workfoxes/kayo/internal/indicator/macd"
@@ -24,7 +25,7 @@ type BaseIndicator struct {
 }
 
 // NewIndicator : will create new indicator based on the item pattern
-func NewIndicator(name string) TradeIndicator {
+func NewIndicator(name string) *TradeIndicator {
 	var indicator TradeIndicator
 	switch name {
 	case RSI:
@@ -39,6 +40,8 @@ func NewIndicator(name string) TradeIndicator {
 		indicator = new(obv.Indicator)
 	case AccumulationDistributionLine:
 		indicator = new(adl.Indicator)
+	default:
+		panic(errors.IndicatorNotFound)
 	}
-	return indicator
+	return &indicator
 }

@@ -22,13 +22,13 @@ func (b *Binance) Initialize() {
 }
 
 // Listen : will listen the market data changes for the selected symbol
-func (b *Binance) Listen(symbol string, itemChan chan *common.Item) {
+func (b *Binance) Listen(symbol string, itemChan *chan *common.Item) {
 	b.ItemChan = itemChan
 	var symbols []string
 	symbols = append(symbols, strings.Split(symbol, "|")...)
-	log.Info(symbols)
+	log.Info("Rigistering the ", symbols, " With Binance")
 	b.RegisterWebsocketClient(fmt.Sprintf("%s%s", StreamHostURL, RawStreamEndpoint))
-	b.SendWSMessage(&WebSocketRequest{ID: 1000, Params: []string{"btcusdt@kline_1m"}, Method: "SUBSCRIBE"})
+	b.SendWSMessage(&WebSocketRequest{ID: 1000, Params: []string{strings.ToLower(symbol) + "@kline_1m"}, Method: "SUBSCRIBE"})
 }
 
 // OnWSMessage : will be triggered when a message is received from the Financial Broker
@@ -41,7 +41,7 @@ func (b *Binance) OnWSMessage(msg []byte, w *ws.Conn) {
 	if binanceResponse.KPI.IsKlineClosed {
 		_item := convertToItem(&binanceResponse)
 		log.Debug("New Trade Item: ", _item)
-		b.ItemChan <- _item
+		(*b.ItemChan) <- _item
 	}
 }
 

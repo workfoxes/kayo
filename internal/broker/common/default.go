@@ -2,6 +2,7 @@ package common
 
 import (
 	"encoding/json"
+
 	"github.com/workfoxes/kayo/internal/utils/ws"
 	"github.com/workfoxes/kayo/pkg/log"
 )
@@ -13,7 +14,7 @@ type BaseBroker struct {
 	Enabled              bool
 	WS                   *ws.Conn
 	Symbol               []string
-	ItemChan             chan *Item
+	ItemChan             *chan *Item
 }
 
 // OnWSConnected : Will be triggered when the websocket connection is opened for monitoring the trading api
@@ -51,7 +52,7 @@ func (b *BaseBroker) RegisterWebsocketClient(url string) {
 	}
 }
 
-func (b *BaseBroker) Listen(symbol string, itemChan chan *Item) {
+func (b *BaseBroker) Listen(symbol string, itemChan *chan *Item) {
 }
 
 // Item : will have all the payload needed for the item with its config
