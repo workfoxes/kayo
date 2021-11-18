@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/workfoxes/kayo/internal/indicator/common"
 	"github.com/workfoxes/kayo/internal/indicator/macd"
 	"github.com/workfoxes/kayo/internal/indicator/rsi"
 	"github.com/workfoxes/kayo/internal/indicator/so"
@@ -18,9 +19,9 @@ func TestIndicatorPositive(t *testing.T) {
 		args args
 		want TradeIndicator
 	}{
-		{name: "RSI_positive", args: args{name: RSI}, want: new(rsi.Indicator)},
-		{name: "MACD_positive", args: args{name: MACD}, want: new(macd.Indicator)},
-		{name: "SO_positive", args: args{name: StochasticOscillator}, want: new(so.Indicator)},
+		{name: "RSI_positive", args: args{name: common.RSI}, want: new(rsi.RSI)},
+		{name: "MACD_positive", args: args{name: common.MACD}, want: new(macd.Indicator)},
+		{name: "SO_positive", args: args{name: common.StochasticOscillator}, want: new(so.Indicator)},
 		// {name: "IBPosition", args: args{brokerName: _default.InteractiveBroker}, want: new(ib.InteractiveBroker)},
 	}
 	for _, tt := range tests {

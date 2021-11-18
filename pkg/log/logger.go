@@ -1,9 +1,10 @@
 package log
 
 import (
-	_logger "github.com/sirupsen/logrus"
 	"os"
 	"sync"
+
+	_logger "github.com/sirupsen/logrus"
 )
 
 var l Logger
@@ -17,7 +18,7 @@ func (l *Logger) Init() {
 	l.once.Do(func() {
 		l._default = &_logger.Logger{
 			Out:          os.Stderr,
-			Formatter:    new(_logger.TextFormatter),
+			Formatter:    &_logger.TextFormatter{ForceColors: true},
 			Hooks:        make(_logger.LevelHooks),
 			Level:        _logger.TraceLevel,
 			ExitFunc:     os.Exit,

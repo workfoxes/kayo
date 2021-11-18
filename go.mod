@@ -4,17 +4,18 @@ go 1.16
 
 require (
 	github.com/alpacahq/alpaca-trade-api-go v1.9.0
-	github.com/andybalholm/brotli v1.0.3 // indirect
-	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/go-redis/redis v6.15.9+incompatible
-	github.com/go-redis/redis/v8 v8.11.3
-	github.com/gofiber/fiber/v2 v2.18.0
+	github.com/go-redis/redis/v8 v8.11.4
+	github.com/gofiber/fiber/v2 v2.21.0
 	github.com/gorilla/websocket v1.4.2 // indirect
-	github.com/klauspost/compress v1.13.6 // indirect
+	github.com/markcheno/go-quote v0.0.0-20210728005305-f6d452d96e34
+	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/sirupsen/logrus v1.8.1
-	github.com/stretchr/testify v1.7.0 // indirect
-	github.com/valyala/fasthttp v1.30.0 // indirect
-	golang.org/x/net v0.0.0-20210917163549-3c21e5b27794
-	golang.org/x/sys v0.0.0-20210917161153-d61c044b1678 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	github.com/workfoxes/calypso v1.1.1
+	go.oneofone.dev/ta v0.0.7 // indirect
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2
+	golang.org/x/sys v0.0.0-20211113001501-0c823b97ae02 // indirect
+	golang.org/x/tools v0.1.8-0.20211029000441-d6a9af8af023 // indirect
+	gonum.org/v1/gonum v0.9.3 // indirect
 )
+
+replace github.com/workfoxes/calypso => ../calypso

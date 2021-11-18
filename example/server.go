@@ -10,6 +10,9 @@ import (
 
 func logger() {
 	app := fiber.New()
+	// spy, _ := quote.NewQuoteFromYahoo("spy", "2016-01-01", "2016-04-01", quote.Daily, true)
+	// dema, _ := ta.New(spy.Close).Dema(10)
+	// fmt.Println(dema)
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		log.Print("Default Server")

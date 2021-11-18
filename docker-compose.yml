@@ -1,30 +1,77 @@
 version: "3.9"
 services:
+  calypso:
+    container_name: wf-calypso
+    build:
+      context: ../calypso
+      dockerfile: Dockerfile
+    image: workfoxes/calypso
+
   mongodb:
-    container_name: mongodb
+    container_name: wf-mongodb
     image: mongo:5.0.2
     volumes:
       - ./cache/db/:/data/doc_db
     ports:
       - "27017:27017"
+
+  postgres:
+    image: postgres:14.1
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=kayo
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - '5438:5432'
+    volumes: 
+      - ./cache/pg-data:/var/lib/postgresql/data
   
   redis-cache:
-    container_name: redis-cache
+    container_name: wf-redis
     image: redis:6.2.5-alpine3.14
     volumes:
       - ./cache/redis/:/data
     ports:
       - "6379:6379"
 
-#  influxdb:
-#    container_name: influxdb
-#    image: influxdb:2.0.7-alpine
-#    ports:
-#      - '8086:8086'
-#    volumes:
-#      - ./cache/influx:/var/lib/influxdb
-#    environment:
-#      - INFLUXDB_DB=db0
+  influxdb:
+    container_name: wf-influxdb
+    image: influxdb:2.0.7-alpine
+    ports:
+      - '8086:8086'
+    volumes:
+      - ./cache/influx:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=db0
+
+  client:
+    container_name: wf-kayo-client
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    image: workfoxes/kayo-client
+    ports:
+      - 80:3000
+    depends_on: 
+      - backend
+
+  backend:
+    container_name: wf-kayo-service
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    image: workfoxes/kayo-service
+    ports:
+      - 8000:8000
+    depends_on:
+      - mongodb
+      - redis-cache
+      - influxdb
+      - calypso
 
 #  kayo-worker:
 #    container_name: kayo-service

@@ -57,10 +57,10 @@ func (b *BaseBroker) Listen(symbol string, itemChan *chan *Item) {
 
 // Item : will have all the payload needed for the item with its config
 type Item struct {
-	Symbol       string
-	Time         int64
-	OpenPrice    string
-	ClosePrice   string
-	HighestPrice string
-	LowestPrice  string
+	Symbol       string  `json:"Symbol"`
+	Time         int64   `json:"Time"`
+	OpenPrice    float64 `json:"OpenPrice"`
+	ClosePrice   float64 `json:"ClosePrice"`
+	HighestPrice float64 `json:"HighestPrice"`
+	LowestPrice  float64 `json:"LowestPrice"`
 }

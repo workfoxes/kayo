@@ -1,6 +1,6 @@
 package worker
 
-import "github.com/go-redis/redis"
+import "github.com/go-redis/redis/v8"
 
 const (
 	KayoDefaultChannel = ""

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/workfoxes/kayo/internal/broker/common"
+	"github.com/workfoxes/kayo/internal/utils"
 	"github.com/workfoxes/kayo/internal/utils/ws"
 	"github.com/workfoxes/kayo/pkg/log"
 )
@@ -50,12 +51,11 @@ func convertToItem(kline *WebSocketResponse) *common.Item {
 	return &common.Item{
 		Symbol:       kline.Symbol,
 		Time:         kline.KPI.KStartTime,
-		OpenPrice:    kline.KPI.OpenPrice,
-		ClosePrice:   kline.KPI.ClosePrice,
-		HighestPrice: kline.KPI.HighestPrice,
-		LowestPrice:  kline.KPI.LowestPrice,
+		OpenPrice:    utils.ParseFloat(kline.KPI.OpenPrice),
+		ClosePrice:   utils.ParseFloat(kline.KPI.ClosePrice),
+		HighestPrice: utils.ParseFloat(kline.KPI.HighestPrice),
+		LowestPrice:  utils.ParseFloat(kline.KPI.LowestPrice),
 	}
-
 }
 
 func (b *Binance) OnWSError(err error) {

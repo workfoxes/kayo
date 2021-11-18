@@ -4,41 +4,28 @@ import (
 	"github.com/workfoxes/kayo/internal/errors"
 	"github.com/workfoxes/kayo/internal/indicator/adl"
 	"github.com/workfoxes/kayo/internal/indicator/adx"
+	"github.com/workfoxes/kayo/internal/indicator/common"
 	"github.com/workfoxes/kayo/internal/indicator/macd"
 	"github.com/workfoxes/kayo/internal/indicator/obv"
 	"github.com/workfoxes/kayo/internal/indicator/rsi"
 	"github.com/workfoxes/kayo/internal/indicator/so"
 )
 
-// SupportedTradingIndicators  - list all supporting trading indicator
-
-const (
-	RSI                          = "RSI"
-	MACD                         = "MACD"
-	StochasticOscillator         = "StochasticOscillator"
-	AverageDirectionalIndex      = "AverageDirectionalIndex"
-	OnBalanceVolume              = "OnBalanceVolume"
-	AccumulationDistributionLine = "AccumulationDistributionLine"
-)
-
-type BaseIndicator struct {
-}
-
 // NewIndicator : will create new indicator based on the item pattern
 func NewIndicator(name string) *TradeIndicator {
 	var indicator TradeIndicator
 	switch name {
-	case RSI:
-		indicator = new(rsi.Indicator)
-	case MACD:
+	case common.RSI:
+		indicator = new(rsi.RSI)
+	case common.MACD:
 		indicator = new(macd.Indicator)
-	case StochasticOscillator:
+	case common.StochasticOscillator:
 		indicator = new(so.Indicator)
-	case AverageDirectionalIndex:
+	case common.AverageDirectionalIndex:
 		indicator = new(adx.Indicator)
-	case OnBalanceVolume:
+	case common.OnBalanceVolume:
 		indicator = new(obv.Indicator)
-	case AccumulationDistributionLine:
+	case common.AccumulationDistributionLine:
 		indicator = new(adl.Indicator)
 	default:
 		panic(errors.IndicatorNotFound)
