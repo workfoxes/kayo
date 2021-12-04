@@ -2,9 +2,9 @@ package common
 
 import (
 	"encoding/json"
+	"github.com/workfoxes/calypso/pkg/log"
 
 	"github.com/workfoxes/kayo/internal/utils/ws"
-	"github.com/workfoxes/kayo/pkg/log"
 )
 
 // BaseBroker stores the individual broker information

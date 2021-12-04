@@ -23,15 +23,15 @@ var (
 
 // Requester : is the struct for the request client
 type Requester struct {
-	HTTPClient *http.Client
-	//limiter            Limiter
-	Name       string
-	UserAgent  string
-	maxRetries int
-	jobs       int32
-	//Nonce              nonce.Nonce
+	HTTPClient         *http.Client
+	Name               string
+	UserAgent          string
+	maxRetries         int
+	jobs               int32
 	disableRateLimiter int32
 	backoff            Backoff
+	//Nonce              nonce.Nonce
+	//limiter            Limiter
 	//retryPolicy        RetryPolicy
 	//timedLock *timedmutex.TimedMutex
 }

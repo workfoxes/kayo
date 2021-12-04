@@ -1,5 +1,7 @@
 package common
 
+import "github.com/workfoxes/kayo/internal/broker/common"
+
 // BaseIndicator : Base Indicator for all the indicator support in kayo
 type BaseIndicator struct {
 	Name      string
@@ -22,6 +24,11 @@ func (i *BaseIndicator) Initialize() {
 }
 
 func (i *BaseIndicator) Plot() {
+	i.Name = "Name"
+	i.ShortName = "ShortName"
+}
+
+func (i *BaseIndicator) Process(item *common.Item) {
 	i.Name = "Name"
 	i.ShortName = "ShortName"
 }

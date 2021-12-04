@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
+	"github.com/workfoxes/kayo/app"
 	"github.com/workfoxes/kayo/internal/broker"
-	"strings"
 )
 
 type KayoWorker struct {
@@ -23,13 +23,7 @@ var (
 )
 
 func main() {
-	_symbols := strings.SplitAfter(*_symbol, ",")
-	kayo := &KayoWorker{
-		Name:       "Kayo",
-		BrokerName: *_broker,
-		Symbol:     _symbols,
-		IsLive:     *_isLive,
-		Strategy:   *_strategy,
-	}
-	kayo.Broker = *broker.NewBroker(kayo.BrokerName)
+	go func() {
+		app.StartKayoServer()
+	}()
 }

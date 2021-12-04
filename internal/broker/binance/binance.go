@@ -5,15 +5,17 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/workfoxes/calypso/pkg/log"
+
 	"github.com/workfoxes/kayo/internal/broker/common"
 	"github.com/workfoxes/kayo/internal/utils"
 	"github.com/workfoxes/kayo/internal/utils/ws"
-	"github.com/workfoxes/kayo/pkg/log"
 )
 
 // Binance : is Object that will hold the connection and configuration with the Binance Service.
 type Binance struct {
 	common.BaseBroker
+	ItemChanMapping map[string]*chan *common.Item
 }
 
 // Initialize : will initialize the broker config and setup
@@ -27,7 +29,7 @@ func (b *Binance) Listen(symbol string, itemChan *chan *common.Item) {
 	b.ItemChan = itemChan
 	var symbols []string
 	symbols = append(symbols, strings.Split(symbol, "|")...)
-	log.Info("Rigistering the ", symbols, " With Binance")
+	log.Info("Registering the ", symbols, " With Binance")
 	b.RegisterWebsocketClient(fmt.Sprintf("%s%s", StreamHostURL, RawStreamEndpoint))
 	b.SendWSMessage(&WebSocketRequest{ID: 1000, Params: []string{strings.ToLower(symbol) + "@kline_1m"}, Method: "SUBSCRIBE"})
 }
@@ -42,7 +44,7 @@ func (b *Binance) OnWSMessage(msg []byte, w *ws.Conn) {
 	if binanceResponse.KPI.IsKlineClosed {
 		_item := convertToItem(&binanceResponse)
 		log.Debug("New Trade Item: ", _item)
-		(*b.ItemChan) <- _item
+		*b.ItemChan <- _item
 	}
 }
 

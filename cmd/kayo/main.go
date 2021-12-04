@@ -5,7 +5,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/workfoxes/kayo/pkg/runner"
+	"github.com/workfoxes/kayo/app"
+
+	"github.com/workfoxes/kayo/internal/agent"
+	"github.com/workfoxes/kayo/internal/model"
+	"github.com/workfoxes/kayo/internal/strategy"
 )
 
 var (
@@ -17,13 +21,55 @@ var (
 )
 
 func main() {
+	go func() {
+		app.StartKayoServer()
+	}()
+	s1 := strategy.Strategy{
+		ID:       "001",
+		Strategy: "001",
+		TakeProfit: strategy.ItemPointer{
+			Type:  "Percentage",
+			Value: 2,
+		},
+		StopLoss: strategy.ItemPointer{
+			Type:  "Percentage",
+			Value: -0.5,
+		},
+		BuyFilterCheck: []strategy.FilterCheck{
+			{
+				Indicator: "RSI",
+				IndicatorParams: []strategy.IndicatorParams{
+					{Key: "LookBackPeriod", Value: "14"},
+					{Key: "AverageMethod", Value: "EMA"},
+					{Key: "OverBuyLimit", Value: "80"},
+					{Key: "OverSellLimit", Value: "30"},
+					{Key: "CrossOver", Value: "true"},
+				},
+			},
+		},
+		SellFilterCheck: []strategy.FilterCheck{
+			{
+				Indicator: "RSI",
+				IndicatorParams: []strategy.IndicatorParams{
+					{Key: "LookBackPeriod", Value: "14"},
+					{Key: "AverageMethod", Value: "EMA"},
+					{Key: "OverBuyLimit", Value: "80"},
+					{Key: "OverSellLimit", Value: "30"},
+					{Key: "CrossOver", Value: "true"},
+				},
+			},
+		},
+	}
 	_symbols := strings.SplitAfter(*_symbol, ",")
 	for _, value := range _symbols {
-		_runner := runner.Runner{BrokerName: *_broker, Symbol: value,
-			IsLive:    *_isLive,
-			Strategy:  *_strategy,
-			Indicator: *_indicator}
-		_runner.Initialize()
+		go func(value string) {
+			_agent := &agent.Agent{
+				Symbol:   value,
+				UserCtx:  &model.User{},
+				Strategy: s1,
+			}
+			_agent.Run()
+		}(value)
 	}
 	for {
 		time.Sleep(time.Second * 1000000)

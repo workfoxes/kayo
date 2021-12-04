@@ -1,15 +1,13 @@
 package strategy
 
 import (
-	"fmt"
-
 	"github.com/workfoxes/kayo/internal/indicator"
 )
 
 type Strategy struct {
 	ID              string        `json:"_id"`
 	Strategy        string        `json:"Strategy"`
-	LimitOnClose    ItemPointer   `json:"LimitOnClose"`
+	TakeProfit      ItemPointer   `json:"TakeProfit"`
 	StopLoss        ItemPointer   `json:"StopLoss"`
 	BuyFilterCheck  []FilterCheck `json:"BuyFilterCheck"`
 	SellFilterCheck []FilterCheck `json:"SellFilterCheck"`
@@ -30,7 +28,8 @@ type FilterCheck struct {
 	IndicatorParams []IndicatorParams `json:"IndicatorParams"`
 }
 
-func ParseStragety(strategy *Strategy) {
+// ParseStrategy will parse the Strategy, so it will be ready to process
+func ParseStrategy(strategy *Strategy) {
 	for _, buyFilter := range strategy.BuyFilterCheck {
 		_indicator := indicator.NewIndicator(buyFilter.Indicator)
 		strategy.BuyFilters = append(strategy.BuyFilters, _indicator)
@@ -40,45 +39,4 @@ func ParseStragety(strategy *Strategy) {
 		_indicator := indicator.NewIndicator(sellFilter.Indicator)
 		strategy.SellFilters = append(strategy.SellFilters, _indicator)
 	}
-}
-
-func Strategy001() {
-	s1 := &Strategy{
-		ID:       "001",
-		Strategy: "001",
-		LimitOnClose: ItemPointer{
-			Type:  "Percentage",
-			Value: 2,
-		},
-		StopLoss: ItemPointer{
-			Type:  "Percentage",
-			Value: -0.5,
-		},
-		BuyFilterCheck: []FilterCheck{
-			{
-				Indicator: "RSI",
-				IndicatorParams: []IndicatorParams{
-					{Key: "LookBackPeriod", Value: "14"},
-					{Key: "AverageMethod", Value: "EMA"},
-					{Key: "OverBuyLimit", Value: "80"},
-					{Key: "OverSellLimit", Value: "30"},
-					{Key: "CrossOver", Value: "true"},
-				},
-			},
-		},
-		SellFilterCheck: []FilterCheck{
-			{
-				Indicator: "RSI",
-				IndicatorParams: []IndicatorParams{
-					{Key: "LookBackPeriod", Value: "14"},
-					{Key: "AverageMethod", Value: "EMA"},
-					{Key: "OverBuyLimit", Value: "80"},
-					{Key: "OverSellLimit", Value: "30"},
-					{Key: "CrossOver", Value: "true"},
-				},
-			},
-		},
-	}
-	fmt.Println(s1)
-
 }

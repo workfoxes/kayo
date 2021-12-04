@@ -16,11 +16,15 @@ services:
       - "27017:27017"
 
   postgres:
+    container_name: wf-postgres
     image: postgres:14.1
     restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=kayo
+#      - APP_DB_USER=docker
+#      - APP_DB_PASS=docker
+      - APP_DB_NAME=kayo
     logging:
       options:
         max-size: 10m
@@ -48,30 +52,50 @@ services:
     environment:
       - INFLUXDB_DB=db0
 
-  client:
-    container_name: wf-kayo-client
-    build:
-      context: ./web
-      dockerfile: Dockerfile
-    image: workfoxes/kayo-client
+  roach-ui:
+    container_name: wf-cockroach
+    image: cockroachdb/cockroach
+    command: start --insecure
+    expose:
+      - "8080"
+      - "26257"
     ports:
-      - 80:3000
-    depends_on: 
-      - backend
+      - "26257:26257"
+      - "8080:8080"
+    networks:
+      - roachnet
+  db-1:
+    image: cockroachdb/cockroach
+    command: start --insecure --join=roach-ui
+    networks:
+      - roachnet
+    volumes:
+      - ./data/db-1:/cockroach/cockroach-data
 
-  backend:
-    container_name: wf-kayo-service
-    build:
-      context: .
-      dockerfile: web.Dockerfile
-    image: workfoxes/kayo-service
-    ports:
-      - 8000:8000
-    depends_on:
-      - mongodb
-      - redis-cache
-      - influxdb
-      - calypso
+  # client:
+  #   container_name: wf-kayo-client
+  #   build:
+  #     context: ./web
+  #     dockerfile: Dockerfile
+  #   image: workfoxes/kayo-client
+  #   ports:
+  #     - 80:3000
+  #   depends_on: 
+  #     - backend
+
+  # backend:
+  #   container_name: wf-kayo-service
+  #   build:
+  #     context: .
+  #     dockerfile: dev.Dockerfile
+  #   image: workfoxes/kayo-service
+  #   ports:
+  #     - 8000:8000
+  #   depends_on:
+  #     - mongodb
+  #     - redis-cache
+  #     - influxdb
+  #     - calypso
 
 #  kayo-worker:
 #    container_name: kayo-service
