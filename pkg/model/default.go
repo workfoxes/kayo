@@ -7,13 +7,7 @@ import (
 
 func AutoMigrateModel(db *gorm.DB) {
 	err := db.AutoMigrate(
-		&User{},
-		&Group{},
-
-		&Strategy{},
-		&ItemPointer{},
-		&FilterCheck{},
-		&IndicatorParams{},
+		&Order{},
 	)
 	if err != nil {
 		log.Panic(err)

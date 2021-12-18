@@ -14,6 +14,7 @@ func PreRequest(ctx *fiber.Ctx) error {
 	ctx.Locals("request_start_time", time.Now())
 	_session := &session.BaseSession{
 		DB: db.DB,
+		TX: db.DB.Begin(),
 	}
 	ctx.Locals("session", _session)
 	return nil
@@ -21,5 +22,7 @@ func PreRequest(ctx *fiber.Ctx) error {
 
 func PostRequest(ctx *fiber.Ctx) error {
 	ctx.Locals("request_end_time", time.Now())
+	s := ctx.Locals("session").(*session.BaseSession)
+	s.DB.Commit()
 	return nil
 }

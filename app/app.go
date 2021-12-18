@@ -26,6 +26,7 @@ func StartKayoServer() {
 	}))
 	kayoServer.Invoker(func(DB *gorm.DB) {
 		model.AutoMigrateModel(DB)
+		Bootstrap(DB)
 	})
 	RegisterBlueprints(kayoServer)
 	kayoServer.Start()

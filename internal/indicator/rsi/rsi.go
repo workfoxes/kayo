@@ -1,6 +1,9 @@
 package rsi
 
-import "github.com/workfoxes/kayo/internal/indicator/common"
+import (
+	commonB "github.com/workfoxes/kayo/internal/broker/common"
+	"github.com/workfoxes/kayo/internal/indicator/common"
+)
 
 // RSI : Relative Strength Index (RSI).
 // Compares the magnitude of recent gains and losses over a specified time
@@ -17,4 +20,9 @@ type RSI struct {
 type Params struct {
 	LookBackPeriod int
 	AverageMethod  string
+}
+
+func (i *RSI) Process(item *commonB.Item) {
+	i.Name = "Name"
+	i.ShortName = "ShortName"
 }

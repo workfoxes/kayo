@@ -6,7 +6,7 @@ import (
 
 type SystemModel struct {
 	gorm.Model
-	CreatedBy uint `json:"created_by"`
-	UpdatedBy uint `json:"updated_by"`
-	DeletedBy uint `json:"deleted_by"`
+	CreatedBy string `json:"created_by"`
+	UpdatedBy string `json:"updated_by"`
+	DeletedBy string `json:"deleted_by"`
 }

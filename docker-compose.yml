@@ -30,7 +30,7 @@ services:
         max-size: 10m
         max-file: "3"
     ports:
-      - '5438:5432'
+      - '5432:5432'
     volumes: 
       - ./cache/pg-data:/var/lib/postgresql/data
   
@@ -51,26 +51,26 @@ services:
       - ./cache/influx:/var/lib/influxdb
     environment:
       - INFLUXDB_DB=db0
-
-  roach-ui:
-    container_name: wf-cockroach
-    image: cockroachdb/cockroach
-    command: start --insecure
-    expose:
-      - "8080"
-      - "26257"
-    ports:
-      - "26257:26257"
-      - "8080:8080"
-    networks:
-      - roachnet
-  db-1:
-    image: cockroachdb/cockroach
-    command: start --insecure --join=roach-ui
-    networks:
-      - roachnet
-    volumes:
-      - ./data/db-1:/cockroach/cockroach-data
+#
+#  roach-ui:
+#    container_name: wf-cockroach
+#    image: cockroachdb/cockroach
+#    command: start --insecure
+#    expose:
+#      - "8080"
+#      - "26257"
+#    ports:
+#      - "26257:26257"
+#      - "8080:8080"
+#    networks:
+#      - roachnet
+#  db-1:
+#    image: cockroachdb/cockroach
+#    command: start --insecure --join=roach-ui
+#    networks:
+#      - roachnet
+#    volumes:
+#      - ./data/db-1:/cockroach/cockroach-data
 
   # client:
   #   container_name: wf-kayo-client

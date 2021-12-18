@@ -29,7 +29,7 @@ type Requester struct {
 	maxRetries         int
 	jobs               int32
 	disableRateLimiter int32
-	backoff            Backoff
+	//backoff            Backoff
 	//Nonce              nonce.Nonce
 	//limiter            Limiter
 	//retryPolicy        RetryPolicy

@@ -2,8 +2,10 @@ package main
 
 import (
 	"flag"
-	"github.com/workfoxes/kayo/app"
+	"fmt"
+	"github.com/workfoxes/calypso/pkg/log"
 	"github.com/workfoxes/kayo/internal/broker"
+	"github.com/workfoxes/kayo/pkg/constant"
 )
 
 type KayoWorker struct {
@@ -23,7 +25,11 @@ var (
 )
 
 func main() {
-	go func() {
-		app.StartKayoServer()
-	}()
+	BootKayo()
+}
+
+// BootKayo : will bootstrap the bot check for all the running workers and start them
+func BootKayo() {
+	fmt.Printf(constant.ASCIILogo)
+	log.Info("Starting the Kayo Bot")
 }

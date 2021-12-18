@@ -11,6 +11,7 @@ import (
 	"github.com/workfoxes/kayo/internal/broker"
 	"github.com/workfoxes/kayo/internal/broker/common"
 	"github.com/workfoxes/kayo/internal/indicator"
+	"sync"
 )
 
 type Controller struct {
@@ -25,6 +26,7 @@ type Controller struct {
 var (
 	ControllerMap map[string]*Controller
 	BrokerMap     map[string]*broker.StockBroker
+	wait          sync.WaitGroup
 )
 
 func GetBroker(_broker string) *broker.StockBroker {
@@ -56,7 +58,14 @@ func (c *Controller) ProcessIndicator() {
 	for cValue := range c.ItemChan {
 		log.Info("ProcessIndicator", "symbol", c.Symbol, "value", cValue)
 		for _, _indicator := range c.Indicators {
-			go (*_indicator).Process(cValue)
+			wait.Add(1)
+			_indicator := _indicator
+			go func() {
+				defer wait.Done()
+				(*_indicator).Process(cValue)
+			}()
 		}
+		// wait finishing
+		wait.Wait()
 	}
 }

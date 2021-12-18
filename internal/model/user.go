@@ -1,9 +1,10 @@
 package model
 
-import "gorm.io/gorm"
+type UserType string
 
 type User struct {
-	gorm.Model
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
+	Identity
+	FirstName string   `gorm:"column:first_name;default:null" json:"FirstName"`
+	LastName  string   `gorm:"column:last_name;default:null" json:"LastName"`
+	Status    UserType `gorm:"column:status;default:Active" json:"Status"`
 }
