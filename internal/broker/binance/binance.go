@@ -12,6 +12,10 @@ import (
 	"github.com/workfoxes/kayo/internal/utils/ws"
 )
 
+var (
+	counter = int32(0)
+)
+
 // Binance : is Object that will hold the connection and configuration with the Binance Service.
 type Binance struct {
 	common.BaseBroker
@@ -29,7 +33,7 @@ func (b *Binance) Listen(symbol string, itemChan *chan *common.Item) {
 	b.ItemChan = itemChan
 	var symbols []string
 	symbols = append(symbols, strings.Split(symbol, "|")...)
-	log.Info("Registering the ", symbols, " With Binance")
+	log.S.Info("Registering the ", symbols, " With Binance")
 	b.RegisterWebsocketClient(fmt.Sprintf("%s%s", StreamHostURL, RawStreamEndpoint))
 	b.SendWSMessage(&WebSocketRequest{ID: 1000, Params: []string{strings.ToLower(symbol) + "@kline_1m"}, Method: "SUBSCRIBE"})
 }
@@ -41,9 +45,12 @@ func (b *Binance) OnWSMessage(msg []byte, w *ws.Conn) {
 	if err := json.Unmarshal(msg, &binanceResponse); err != nil {
 		log.Error("Error from Websocket: " + err.Error())
 	}
+	counter += 1
+	log.S.Debug(counter, " - ", binanceResponse)
 	if binanceResponse.KPI.IsKlineClosed {
+		counter = 0
 		_item := convertToItem(&binanceResponse)
-		log.Debug("New Trade Item: ", _item)
+		log.S.Debug("New Trade Item: ", _item)
 		*b.ItemChan <- _item
 	}
 }
@@ -51,12 +58,13 @@ func (b *Binance) OnWSMessage(msg []byte, w *ws.Conn) {
 // convertToItem : convert the binance response to Kayo trading Item
 func convertToItem(kline *WebSocketResponse) *common.Item {
 	return &common.Item{
-		Symbol:       kline.Symbol,
-		Time:         kline.KPI.KStartTime,
-		OpenPrice:    utils.ParseFloat(kline.KPI.OpenPrice),
-		ClosePrice:   utils.ParseFloat(kline.KPI.ClosePrice),
-		HighestPrice: utils.ParseFloat(kline.KPI.HighestPrice),
-		LowestPrice:  utils.ParseFloat(kline.KPI.LowestPrice),
+		Symbol:          kline.Symbol,
+		Time:            kline.KPI.KStartTime,
+		OpenPrice:       utils.ParseFloat(kline.KPI.OpenPrice),
+		ClosePrice:      utils.ParseFloat(kline.KPI.ClosePrice),
+		HighestPrice:    utils.ParseFloat(kline.KPI.HighestPrice),
+		LowestPrice:     utils.ParseFloat(kline.KPI.LowestPrice),
+		IndicatorStatus: make(map[string]bool),
 	}
 }
 

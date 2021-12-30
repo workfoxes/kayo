@@ -31,5 +31,5 @@ func main() {
 // BootKayo : will bootstrap the bot check for all the running workers and start them
 func BootKayo() {
 	fmt.Printf(constant.ASCIILogo)
-	log.Info("Starting the Kayo Bot")
+	log.S.Info("Starting the Kayo Bot")
 }

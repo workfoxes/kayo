@@ -1,7 +1,5 @@
 package model
 
-import "github.com/workfoxes/kayo/internal/indicator"
-
 type Strategy struct {
 	SystemModel
 	Name            string        `gorm:"column:Name;" json:"Name"`
@@ -11,8 +9,8 @@ type Strategy struct {
 	BuyFilterCheck  []FilterCheck `json:"BuyFilterCheck,omitempty" gorm:"foreignKey:StrategyID;references:id"`
 	SellFilterCheck []FilterCheck `json:"SellFilterCheck,omitempty" gorm:"foreignKey:StrategyID;references:id"`
 
-	BuyFilters  []*indicator.TradeIndicator `gorm:"-" json:"BuyFilters"`
-	SellFilters []*indicator.TradeIndicator `gorm:"-" json:"SellFilters"`
+	//BuyFilters  []*indicator.TradeIndicator `gorm:"-" json:"BuyFilters"`
+	//SellFilters []*indicator.TradeIndicator `gorm:"-" json:"SellFilters"`
 }
 
 type ItemPointer struct {

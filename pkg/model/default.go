@@ -10,6 +10,6 @@ func AutoMigrateModel(db *gorm.DB) {
 		&Order{},
 	)
 	if err != nil {
-		log.Panic(err)
+		log.S.Panic(err)
 	}
 }

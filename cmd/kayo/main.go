@@ -18,7 +18,7 @@ func main() {
 	//go func() {
 	//	app.StartKayoServer()
 	//}()
-	log.Info("Starting the Bot")
+	log.S.Info("Starting the Bot")
 	//_symbols := strings.SplitAfter(*_symbol, ",")
 	//for _, value := range _symbols {
 	//	go func(value string) {

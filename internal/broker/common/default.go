@@ -19,11 +19,11 @@ type BaseBroker struct {
 
 // OnWSConnected : Will be triggered when the websocket connection is opened for monitoring the trading api
 func (b *BaseBroker) OnWSConnected(w *ws.Conn) {
-	log.Info("Connected to " + b.Name + " Websocket Connection!")
+	log.S.Info("Connected to " + b.Name + " Websocket Connection!")
 }
 
 func (b *BaseBroker) OnWSMessage(msg []byte, w *ws.Conn) {
-	log.Info("New message new: " + string(msg))
+	log.S.Info("New message new: " + string(msg))
 }
 
 func (b *BaseBroker) SendWSMessage(msg interface{}) {
@@ -57,10 +57,11 @@ func (b *BaseBroker) Listen(symbol string, itemChan *chan *Item) {
 
 // Item : will have all the payload needed for the item with its config
 type Item struct {
-	Symbol       string  `json:"Symbol"`
-	Time         int64   `json:"Time"`
-	OpenPrice    float64 `json:"OpenPrice"`
-	ClosePrice   float64 `json:"ClosePrice"`
-	HighestPrice float64 `json:"HighestPrice"`
-	LowestPrice  float64 `json:"LowestPrice"`
+	Symbol          string  `json:"Symbol"`
+	Time            int64   `json:"Time"`
+	OpenPrice       float64 `json:"OpenPrice"`
+	ClosePrice      float64 `json:"ClosePrice"`
+	HighestPrice    float64 `json:"HighestPrice"`
+	LowestPrice     float64 `json:"LowestPrice"`
+	IndicatorStatus map[string]bool
 }

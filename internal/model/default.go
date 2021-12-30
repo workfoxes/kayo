@@ -10,12 +10,12 @@ func AutoMigrateModel(db *gorm.DB) {
 		&User{},
 		&Group{},
 
-		&Strategy{},
+		//&Strategy{},
 		&ItemPointer{},
 		&FilterCheck{},
 		&IndicatorParams{},
 	)
 	if err != nil {
-		log.Panic(err)
+		log.S.Panic(err)
 	}
 }

@@ -29,6 +29,11 @@ var (
 	wait          sync.WaitGroup
 )
 
+func init() {
+	ControllerMap = make(map[string]*Controller)
+	BrokerMap = make(map[string]*broker.StockBroker)
+}
+
 func GetBroker(_broker string) *broker.StockBroker {
 	if BrokerMap != nil && BrokerMap[_broker] != nil {
 		return BrokerMap[_broker]
@@ -48,22 +53,25 @@ func GetController(symbol string) *Controller {
 		ItemChan: make(chan *common.Item, 20),
 	}
 	ControllerMap[symbol] = _controller
-	_broker := GetBroker(_controller.Symbol)
+	_broker := GetBroker("Binance")
 	(*_broker).Listen(_controller.Symbol, &_controller.ItemChan)
 	go (*_controller).ProcessIndicator()
 	return _controller
 }
 
+func (c *Controller) RegisterIndicator(i ...*indicator.TradeIndicator) {
+	c.Indicators = append(c.Indicators, i...)
+}
+
 func (c *Controller) ProcessIndicator() {
 	for cValue := range c.ItemChan {
-		log.Info("ProcessIndicator", "symbol", c.Symbol, "value", cValue)
+		log.S.Info("ProcessIndicator", "symbol", c.Symbol, "value", cValue)
 		for _, _indicator := range c.Indicators {
 			wait.Add(1)
-			_indicator := _indicator
-			go func() {
+			go func(_indicator indicator.TradeIndicator) {
 				defer wait.Done()
-				(*_indicator).Process(cValue)
-			}()
+				_ = _indicator.Process(cValue)
+			}(*_indicator)
 		}
 		// wait finishing
 		wait.Wait()

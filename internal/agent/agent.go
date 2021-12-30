@@ -7,20 +7,27 @@ package agent
 
 import (
 	"github.com/workfoxes/calypso/pkg/log"
-	"github.com/workfoxes/kayo/internal/model"
+	"github.com/workfoxes/kayo/internal/omen"
 	"github.com/workfoxes/kayo/internal/strategy"
 )
 
 type Agent struct {
-	Symbol   string
-	UserCtx  *model.User
+	Symbol string
+	//UserCtx  *model.User
 	Strategy strategy.Strategy
 }
 
 func (a *Agent) Run() {
-	log.Info("Agent is running")
+	log.S.Info("Agent is running")
+}
+
+func (a *Agent) Start() {
+	log.S.Info("Getting Agent allocation for %s", a.Symbol)
+	_c := omen.GetController(a.Symbol)
+	_indicators := a.Strategy.GetIndicators()
+	_c.RegisterIndicator(_indicators...)
 }
 
 func (a *Agent) Stop() {
-	log.Info("Stopping Agent")
+	log.S.Info("Stopping Agent")
 }

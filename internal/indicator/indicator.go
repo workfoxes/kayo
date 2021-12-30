@@ -18,7 +18,7 @@ func NewIndicator(name string) *TradeIndicator {
 	case common.RSI:
 		indicator = new(rsi.RSI)
 	case common.MACD:
-		indicator = new(macd.Indicator)
+		indicator = new(macd.MACD)
 	case common.StochasticOscillator:
 		indicator = new(so.Indicator)
 	case common.AverageDirectionalIndex:

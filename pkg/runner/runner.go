@@ -32,6 +32,6 @@ func (r *Runner) Initialize() {
 
 func (r *Runner) checkLine(itemChan *chan *common.Item) {
 	for cValue := range *itemChan {
-		log.Debug(cValue)
+		log.S.Debug(cValue)
 	}
 }

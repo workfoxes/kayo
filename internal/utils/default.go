@@ -11,7 +11,7 @@ func ParseFloat(s string) float64 {
 	if err == nil {
 		return f
 	}
-	log.Panic("ParseFloat: ", s, " -> ", err.Error())
+	log.S.Panic("ParseFloat: ", s, " -> ", err.Error())
 	return 0
 }
 
