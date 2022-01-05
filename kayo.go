@@ -2,8 +2,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"github.com/workfoxes/calypso/pkg/log"
 	"github.com/workfoxes/kayo/internal/broker"
-	"strings"
+	"github.com/workfoxes/kayo/pkg/constant"
 )
 
 type KayoWorker struct {
@@ -23,13 +25,11 @@ var (
 )
 
 func main() {
-	_symbols := strings.SplitAfter(*_symbol, ",")
-	kayo := &KayoWorker{
-		Name:       "Kayo",
-		BrokerName: *_broker,
-		Symbol:     _symbols,
-		IsLive:     *_isLive,
-		Strategy:   *_strategy,
-	}
-	kayo.Broker = *broker.NewBroker(kayo.BrokerName)
+	BootKayo()
+}
+
+// BootKayo : will bootstrap the bot check for all the running workers and start them
+func BootKayo() {
+	fmt.Printf(constant.ASCIILogo)
+	log.S.Info("Starting the Kayo Bot")
 }

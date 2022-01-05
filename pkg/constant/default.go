@@ -1,3 +1,6 @@
+//go:build !test
+// +build !test
+
 package constant
 
 // ASCIILogo is a sweet logo that is optionally printed to the command line window
@@ -22,6 +25,5 @@ KKKKKKKKK    KKKKKKK  aaaaaaaaaa  aaaa    y:::::y            ooooooooooo
                                         y:::::y                            
                                        y:::::y                             
                                       y:::::y                              
-                                     yyyyyyy                               
-
+                                     yyyyyyy
 `

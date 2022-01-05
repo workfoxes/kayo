@@ -310,9 +310,9 @@ argument. Each sample should initialize its own client/service.
 ## Return errors
 
 If the sample can run into errors, return the errors with additional context.
-Don't call `log.Fatal` or friends.
+Don't call `log.S.Fatal` or friends.
 
-`log.Fatal` is difficult to test because it will stop the entire test suite.
+`log.S.Fatal` is difficult to test because it will stop the entire test suite.
 
 Use `fmt.Errorf` to add information when returning errors. Usually, the name of
 the `package.Function` or just `Function` that returned the error is enough. It
@@ -328,11 +328,11 @@ func delete(w io.Writer, resourceID string) error {
 	ctx := context.Background()
 	client, err := foo.NewClient(ctx)
 -	if err != nil {
--		log.Fatal(err)
+-		log.S.Fatal(err)
 -	}
 -	err := client.Delete(resourceID)
 -	if err != nil {
--		log.Fatal(err)
+-		log.S.Fatal(err)
 -	}
 +	if err != nil {
 +		return fmt.Errorf("foo.NewClient: %v", err)

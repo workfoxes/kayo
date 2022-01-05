@@ -1,30 +1,151 @@
 version: "3.9"
 services:
-  mongodb:
-    container_name: mongodb
-    image: mongo:5.0.2
-    volumes:
-      - ./cache/db/:/data/doc_db
-    ports:
-      - "27017:27017"
+#  calypso:
+#    container_name: wf-calypso
+#    build:
+#      context: ../calypso
+#      dockerfile: Dockerfile
+#    image: workfoxes/calypso
+#
+#  mongodb:
+#    container_name: wf-mongodb
+#    image: mongo:5.0.2
+#    volumes:
+#      - ./cache/db/:/data/doc_db
+#    ports:
+#      - "27017:27017"
+#
+#  postgres:
+#    container_name: wf-postgres
+#    image: postgres:14.1
+#    restart: always
+#    environment:
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=kayo
+##      - APP_DB_USER=docker
+##      - APP_DB_PASS=docker
+#      - APP_DB_NAME=kayo
+#    logging:
+#      options:
+#        max-size: 10m
+#        max-file: "3"
+#    ports:
+#      - '5432:5432'
+#    volumes:
+#      - ./cache/pg-data:/var/lib/postgresql/data
   
   redis-cache:
-    container_name: redis-cache
+    container_name: wf-redis
     image: redis:6.2.5-alpine3.14
     volumes:
       - ./cache/redis/:/data
     ports:
       - "6379:6379"
 
-#  influxdb:
-#    container_name: influxdb
-#    image: influxdb:2.0.7-alpine
-#    ports:
-#      - '8086:8086'
-#    volumes:
-#      - ./cache/influx:/var/lib/influxdb
+  influxdb:
+    container_name: wf-influxdb
+    image: influxdb:latest
+    ports:
+      - '8086:8086'
+    volumes:
+      - ./cache/influx:/var/lib/influxdb
+      - ./cache/influx/temp/influxdbv2:/var/lib/influxdb2:rw
 #    environment:
-#      - INFLUXDB_DB=db0
+#      - DOCKER_INFLUXDB_INIT_USERNAME=username
+#      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+#      - DOCKER_INFLUXDB_INIT_ORG=kayo
+#      - INFLUXDB_DB=kayo
+#      - INFLUXDB_ADMIN_USER=username
+#      - INFLUXDB_ADMIN_PASSWORD=password
+#      - DOCKER_INFLUXDB_INIT_BUCKET=kayo
+
+  # Use the influx cli to set up an influxdb instance.
+  influxdb_cli:
+    links:
+      - influxdb
+    image: influxdb:latest
+    volumes:
+      # Mount for influxdb data directory and configuration
+      - ./cache/influx/temp/influxdbv2:/var/lib/influxdb2:rw
+      - ./ssl/influxdb-selfsigned.crt:/etc/ssl/influxdb-selfsigned.crt:rw
+      - ./ssl/influxdb-selfsigned.key:/etc/ssl/influxdb-selfsigned.key:rw
+    environment:
+      # Use these same configurations parameters in your telegraf configuration, mytelegraf.conf.
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=username
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=kayo
+      - DOCKER_INFLUXDB_INIT_BUCKET=kayo
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
+      - INFLUXD_TLS_CERT=/etc/ssl/influxdb-selfsigned.crt
+      - INFLUXD_TLS_KEY=/etc/ssl/influxdb-selfsigned.key
+    entrypoint: [ "./entrypoint.sh" ]
+    depends_on:
+      - influxdb
+
+  telegraf:
+    image: telegraf
+    links:
+      - influxdb
+    volumes:
+      # Mount for telegraf config
+      - ./telegraf/mytelegraf.conf:/etc/telegraf/telegraf.conf
+#    env_file:
+#      - ./influxv2.env
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=username
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=kayo
+      - DOCKER_INFLUXDB_INIT_BUCKET=kayo
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
+    depends_on:
+      - influxdb_cli
+#
+#  roach-ui:
+#    container_name: wf-cockroach
+#    image: cockroachdb/cockroach
+#    command: start --insecure
+#    expose:
+#      - "8080"
+#      - "26257"
+#    ports:
+#      - "26257:26257"
+#      - "8080:8080"
+#    networks:
+#      - roachnet
+#  db-1:
+#    image: cockroachdb/cockroach
+#    command: start --insecure --join=roach-ui
+#    networks:
+#      - roachnet
+#    volumes:
+#      - ./data/db-1:/cockroach/cockroach-data
+
+  # client:
+  #   container_name: wf-kayo-client
+  #   build:
+  #     context: ./web
+  #     dockerfile: Dockerfile
+  #   image: workfoxes/kayo-client
+  #   ports:
+  #     - 80:3000
+  #   depends_on: 
+  #     - backend
+
+  # backend:
+  #   container_name: wf-kayo-service
+  #   build:
+  #     context: .
+  #     dockerfile: dev.Dockerfile
+  #   image: workfoxes/kayo-service
+  #   ports:
+  #     - 8000:8000
+  #   depends_on:
+  #     - mongodb
+  #     - redis-cache
+  #     - influxdb
+  #     - calypso
 
 #  kayo-worker:
 #    container_name: kayo-service

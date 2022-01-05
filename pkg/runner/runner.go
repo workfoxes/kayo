@@ -1,12 +1,12 @@
 package runner
 
 import (
+	"github.com/workfoxes/calypso/pkg/log"
 	"strings"
 
 	"github.com/workfoxes/kayo/internal/broker"
 	"github.com/workfoxes/kayo/internal/broker/common"
 	"github.com/workfoxes/kayo/internal/indicator"
-	"github.com/workfoxes/kayo/pkg/log"
 )
 
 // Runner : Holds the current execution state symbol and strategy
@@ -32,6 +32,6 @@ func (r *Runner) Initialize() {
 
 func (r *Runner) checkLine(itemChan *chan *common.Item) {
 	for cValue := range *itemChan {
-		log.Debug(cValue)
+		log.S.Debug(cValue)
 	}
 }

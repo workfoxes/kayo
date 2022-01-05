@@ -2,10 +2,8 @@ package main
 
 import (
 	"flag"
-	"strings"
+	"github.com/workfoxes/calypso/pkg/log"
 	"time"
-
-	"github.com/workfoxes/kayo/pkg/runner"
 )
 
 var (
@@ -17,14 +15,21 @@ var (
 )
 
 func main() {
-	_symbols := strings.SplitAfter(*_symbol, ",")
-	for _, value := range _symbols {
-		_runner := runner.Runner{BrokerName: *_broker, Symbol: value,
-			IsLive:    *_isLive,
-			Strategy:  *_strategy,
-			Indicator: *_indicator}
-		_runner.Initialize()
-	}
+	//go func() {
+	//	app.StartKayoServer()
+	//}()
+	log.S.Info("Starting the Bot")
+	//_symbols := strings.SplitAfter(*_symbol, ",")
+	//for _, value := range _symbols {
+	//	go func(value string) {
+	//		_agent := &agent.Agent{
+	//			Symbol:   value,
+	//			UserCtx:  &model.User{},
+	//			Strategy: s1,
+	//		}
+	//		_agent.Run()
+	//	}(value)
+	//}
 	for {
 		time.Sleep(time.Second * 1000000)
 	}

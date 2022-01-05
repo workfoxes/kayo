@@ -1,6 +1,7 @@
-FROM golang:latest
-COPY . /kayo
-WORKDIR /kayo
+FROM workfoxes/calypso:latest
+WORKDIR /go/src/github.com/workfoxes/kayo
+
+COPY . /go/src/github.com/workfoxes/kayo
 
 RUN go mod download
 
